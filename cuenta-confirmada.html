@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Cronos · Cuenta confirmada</title>
+<style>
+  :root { --bg:#F7EFE7; --card:#FFFDFB; --text:#2B2227; --text2:#6E6168; --accent:#6B5560; --stroke:#E6D9CF; --bad:#B4434F; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#11212D; --card:#16293A; --text:#EDE6E0; --text2:#A9B4BD; --accent:#C9A9B8; --stroke:#24394A; --bad:#E48A93; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--text);
+         font:16px/1.6 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif; padding:16px; }
+  main { max-width:440px; width:100%; background:var(--card); border:1px solid var(--stroke); border-radius:16px;
+         padding:36px 28px; text-align:center; }
+  img { width:72px; height:72px; border-radius:18px; }
+  h1 { font-size:24px; margin:18px 0 8px; }
+  p { color:var(--text2); margin:6px 0; }
+  .bad h1 { color:var(--bad); }
+  small { display:block; margin-top:22px; color:var(--text2); font-size:13px; }
+</style>
+</head>
+<body>
+<main id="box">
+  <img src="logo-300.png" alt="">
+  <h1 id="title">¡Tu cuenta está confirmada!</h1>
+  <p id="msg">Regresa a Cronos y entra con tu correo y contraseña. Ya puedes cerrar esta pestaña.</p>
+  <small>Cronos · tareas y agenda</small>
+</main>
+<script>
+  // Supabase manda el resultado en el # de la liga; no se guarda nada aquí
+  try {
+    const h = new URLSearchParams(location.hash.slice(1));
+    const err = h.get('error_description') || h.get('error');
+    if (err) {
+      document.getElementById('box').classList.add('bad');
+      document.getElementById('title').textContent = 'No se pudo confirmar';
+      document.getElementById('msg').textContent = /expired|invalid/i.test(err)
+        ? 'La liga ya venció o ya se usó. En Cronos vuelve a crear la cuenta o entra si ya la confirmaste.'
+        : 'Algo falló al confirmar tu cuenta. Vuelve a intentarlo desde Cronos.';
+    }
+    // quita los datos de la sesión de la barra de direcciones
+    if (location.hash) history.replaceState(null, '', location.pathname);
+  } catch (e) { }
+</script>
+</body>
+</html>
